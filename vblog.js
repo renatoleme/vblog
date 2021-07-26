@@ -1,6 +1,7 @@
 app.component('vblog', {
     props: {
-        taskId: String
+        taskId: String,
+        zIndex: Number
     },
     data() {
         return {
@@ -11,7 +12,8 @@ app.component('vblog', {
             blogBox: {
                 marginTop: 10,
                 marginLeft: 100,
-                opacity: 1
+                opacity: 1,
+                zIndex: 1
             },
             visible: true
         }
@@ -50,9 +52,13 @@ app.component('vblog', {
 </div>
 `,
     created: function () {
+        this.blogBox.zIndex = this.$props.zIndex
         this.fetchPosts();
     },
     methods: {
+        changeZIndex(val) {
+            this.blogBox.zIndex = val
+        },
         navPostLeft() {
             const prevIndex = this.currentIndex - 1
             if (prevIndex >= 0) {
