@@ -1,11 +1,132 @@
+
+html,body {
+    height:98%;
+}
 .generic-window {
-    background-color: white;
-    color: black;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 85%, rgba(105,105,105,1) 100%, rgba(255,255,255,1) 100%);
+
     margin: 8px;
+    margin-top: 10px;
+        overflow: hidden;
+
 }
 
 .generic-frame {
-    width: 100%;
-    height: 100%;
+    width: fit-content;
+    height: fit-content;
+    background-color: #696969;
+    position: absolute;
+    max-height: 95vh;
+    max-width: 90vw;
+}
+
+.window-title {
+    color: white;
+    padding: 8px;
+    font-size: 20px;
+    font-family: monospace
+
+}
+
+.blog-content {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 8px;
+    max-height: 65vh;
+    overflow-x: scroll;
+    padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+    box-sizing: content-box; /* So the width will be 100% + 17px */
+    max-width: 85vw;
+    align-self: normal;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.nav-btn {
+    margin-top: 10px;
+    margin-right: 10px;
     background-color: black;
+    color: white;
+    border-radius: 50%;
+    border: none;
+    padding: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background-color: gray;
+}
+
+.post-content {
+    margin: 20px;
+}
+
+.post-header {
+    margin: 20px;
+    width: 150px;
+    text-align: left;
+}
+
+.post-author {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.post-date {
+    margin-top: 10px;
+    font-style: italic;
+    color: gray;
+}
+
+.window-header {
+    display: flex;
+    padding: 8px;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.action-buttons {
+    margin-left: auto;
+}
+
+.genericWindow-enter-active {
+    animation-duration: 0.3s;
+    animation-name: maximize;
+}
+
+.genericWindow-leave-active {
+    animation-duration: 0.3s;
+    animation-name: minimize;
+}
+
+@keyframes maximize {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+          
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes minimize {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    
+    to {
+        transform: scale(0);
+        opacity: 0;
+    }
 }
