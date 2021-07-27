@@ -2,7 +2,8 @@ app.component('vblog', {
     props: {
         taskId: String,
         zIndex: Number,
-        maximized: Boolean
+        maximized: Boolean,
+        minimized: Boolean
     },
     data() {
         return {
@@ -60,9 +61,17 @@ app.component('vblog', {
 </div>
 </transition>
 `,
+    mounted() {
+        if (this.$props.minimized) {
+            this.minimizeWindow()
+        }
+    },
     created: function () {
         this.blogBox.zIndex = this.$props.zIndex
         this.fetchPosts();
+        if (this.$props.minimized) {
+            this.visible = false
+        }
         if (this.$props.maximized) {
             this.blogBox.isMaximized = this.$props.maximized
             this.maximizeWindow()
