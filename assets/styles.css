@@ -1,13 +1,13 @@
 
-html,body {
-    height:98%;
-}
+
 .generic-window {
     background: rgb(255,255,255);
     background: linear-gradient(0deg, rgba(255,255,255,1) 90%, rgba(221,221,221,1) 100%, rgba(48,48,48,1) 100%);
     margin: 4px;
     margin-top: 10px;
-    overflow: hidden;
+    overflow: auto;
+    height: calc(100% - 80px);
+    width: calc(100% - 10px);
 }
 
 .generic-frame {
@@ -15,37 +15,34 @@ html,body {
     height: fit-content;
     background-color: #DDDDDD;
     position: absolute;
-    max-height: 95vh;
-    max-width: 90vw;
-    box-shadow: 2px 2px 8px 2px black;
+    box-shadow: 2px 2px 8px 0px black;
 }
 
 .window-title {
     color: black;
     padding: 8px;
-    font-size: 20px;
-    font-family: monospace
-
+    font-size: 25px;
+    font-family: monospace;
+    font-weight: bold;
+    text-shadow: -2px 2px 8px lightgray, 0 0 1em white, 0 0 0.2em white;
+    font-family: 'Noto Sans', sans-serif;
+    text-overflow: ellipsis;
 }
 
 .blog-content {
-    margin-top: 10px;
+    margin: 30px;
     display: flex;
+    width: fit-content;
     flex-direction: row;
     justify-content: flex-start;
-    padding: 8px;
-    max-height: 65vh;
-    overflow-x: scroll;
-    padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-    box-sizing: content-box; /* So the width will be 100% + 17px */
-    max-width: 85vw;
     align-self: normal;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .nav-buttons {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
+    justify-content: flex-start;
+    margin: 10px;
 }
 
 .nav-btn {
@@ -54,15 +51,22 @@ html,body {
     background-color: black;
     color: white;
     border-radius: 50%;
-    border: none;
-    padding: 8px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
+    border: none;
 }
 
 .nav-btn:hover {
     background-color: gray;
+}
+
+.nav-btn:disabled {
+    background-color: gray;
+    cursor: initial;
 }
 
 .post-content {
@@ -73,6 +77,8 @@ html,body {
     margin: 20px;
     width: 150px;
     text-align: left;
+    font-family: 'Lora', serif;
+
 }
 
 .post-author {
@@ -98,8 +104,19 @@ html,body {
 }
 
 
-.btn-action {
+.btn-action-generic {
     color: black;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn-action-generic:hover {
+    color: gray;
+}
+
+.btn-action-generic-close:hover {
+    color: red;
 }
 
 .genericWindow-enter-active {

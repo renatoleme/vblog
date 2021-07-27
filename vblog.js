@@ -1,19 +1,26 @@
 app.component('vblog', {
     props: {
         taskId: String,
-        zIndex: Number
+        zIndex: Number,
+        maximized: Boolean
     },
     data() {
         return {
+            prevEnable: false,
+            nextEnable: false,
             refname: 'vblog',
             posts: [],
             currentIndex: 0,
             currentPost: {},
+            blogBoxBackup: {},
+            isMaximized: false,
             blogBox: {
                 marginTop: 10,
                 marginLeft: 100,
                 opacity: 1,
-                zIndex: 1
+                zIndex: 1,
+                width: 800,
+                height: 600
             },
             visible: true
         }
@@ -22,18 +29,19 @@ app.component('vblog', {
     `
 <transition name="genericWindow" >
 <div v-if="visible" class="generic-frame" :style="blogBox" id="clickable" @mousedown="moveStart($event)" @dblclick="doAction($event)">
-         <div class="window-header"  id="clickable">
-               <div class="window-title"><b>{{ this.currentPost.title }}</b></div>
+         <div class="window-header noselect" id="clickable">
+               <div class="window-title" ><div id="clickable">{{ this.currentPost.title }}</div></div>
                 <div class="action-buttons" id="clickable">
-                    <button v-on:click="minimizeWindow" class="btn-action"><i class="fas fa-window-minimize fa-lg"></i></button>
-                    <button v-on:click="closeWindow" class="btn-action"><i class="fas fa-times fa-lg"></i></button>
+                    <button v-on:click="minimizeWindow" class="btn-action-generic"><i class="fas fa-window-minimize fa-lg"></i></button>
+                    <button v-on:click="maximizeWindow" class="btn-action-generic"><i class="fas fa-window-maximize fa-lg"></i></button>
+                    <button v-on:click="closeWindow" class="btn-action-generic btn-action-generic-close"><i class="fas fa-times fa-lg"></i></button>
                 </div>
          </div>
 <div class="generic-window">
 
 <div class="nav-buttons">
-<button class="nav-btn" @click="navPostLeft" ><i class="fas fa-arrow-left fa-lg"></i></button>
-<button class="nav-btn" @click="navPostRight"><i class="fas fa-arrow-right fa-lg"></i></button>
+<button :disabled='!prevEnable' class="nav-btn" @click="navPostLeft" ><i class="fas fa-arrow-left fa-lg"></i></button>
+<button :disabled='!nextEnable' class="nav-btn" @click="navPostRight"><i class="fas fa-arrow-right fa-lg"></i></button>
 </div>
 <div class="blog-content">
 
@@ -50,14 +58,35 @@ app.component('vblog', {
 </div>
 </div>
 </div>
+</transition>
 `,
     created: function () {
         this.blogBox.zIndex = this.$props.zIndex
         this.fetchPosts();
+        if (this.$props.maximized) {
+            this.blogBox.isMaximized = this.$props.maximized
+            this.maximizeWindow()
+        }
     },
     methods: {
         changeZIndex(val) {
             this.blogBox.zIndex = val
+        },
+        checkPostsAvailabity() {
+            const n_posts = this.posts.length
+            console.log(n_posts)
+            if (this.currentIndex === n_posts - 1) {
+                this.nextEnable = false
+            }
+            else {
+                this.nextEnable = true
+            }
+            if (this.currentIndex === 0) {
+                this.prevEnable = false
+            }
+            else {
+                this.prevEnable = true
+            }
         },
         navPostLeft() {
             const prevIndex = this.currentIndex - 1
@@ -65,6 +94,7 @@ app.component('vblog', {
                 this.currentPost = this.posts[prevIndex]
                 this.currentIndex = prevIndex
             }
+            this.checkPostsAvailabity()
         },
         navPostRight() {
             const nextIndex = this.currentIndex + 1
@@ -72,28 +102,49 @@ app.component('vblog', {
                 this.currentPost = this.posts[nextIndex]
                 this.currentIndex = nextIndex
             }
+            this.checkPostsAvailabity()
         },
         closeWindow(event) {
             this.$emit('close-window', {taskId: this.$props.taskId, ref: this.refname})
         },
         doAction(event) {
             if (event.type === "dblclick" && event.target.id === "clickable") {
-                this.minimizeWindow()
+                this.maximizeWindow()
             }  
         },
         openWindow() {
             this.visible = true
         },
         minimizeWindow() {
-            this.$emit('minimize-window', {trigger: this.openWindow, name: 'v-Blog', icon: 'widgets/vblog/assets/imgs/icon.png'})
+            this.$emit('minimize-window', {trigger: this.openWindow, name: 'v-Blog', icon: 'widgets/vblog/assets/imgs/icon.png', taskId: this.$props.taskId})
             this.visible = false
+        },
+        maximizeWindow() {
+
+            if (!this.isMaximized) {
+                console.log(window.innerHeight)
+                this.blogBoxBackup = JSON.parse(JSON.stringify(this.blogBox))
+                this.blogBox.width = window.innerWidth - 85
+                this.blogBox.height = window.innerHeight 
+                this.blogBox.marginLeft = 78
+                this.blogBox.marginTop = - 8
+                this.isMaximized = true
+            }
+            else {
+                this.isMaximized = false
+                const prevValues =  JSON.parse(JSON.stringify(this.blogBoxBackup))
+                this.blogBox = prevValues
+                console.log(this.blogBoxBackup)
+            }
+            
         },
         setOpacity(opacity) {
             this.blogBox.opacity = opacity
         },
         moveStart(event) {
-            if (event.target.id === "clickable") {
-                const info = { diffY : event.clientY - this.blogBox.marginTop, diffX : event.clientX - this.blogBox.marginLeft, ref: this.$props.taskId}
+            const info = { diffY : event.clientY - this.blogBox.marginTop, diffX : event.clientX - this.blogBox.marginLeft, ref: this.$props.taskId}
+            this.$emit('set-focus', info)
+            if (event.target.id === "clickable" && !this.isMaximized) {
                 this.setOpacity (0.5)
                 this.$emit('move-start', info)
             }
@@ -111,17 +162,12 @@ app.component('vblog', {
             fetch('widgets/vblog/data/posts.json')
                 .then(response => response.json())
                 .then(json => {
-
-                    console.log(json)
                     this.posts = json.posts
-                 
-                    
                 })
-                .finally(() => {
-
-                    console.log(this.posts[0])
-                  
+                .finally(() => {                  
                     this.setCurrentPost()
+                    this.checkPostsAvailabity()
+
                 });
         }
     }
