@@ -4,25 +4,24 @@ html,body {
 }
 .generic-window {
     background: rgb(255,255,255);
-    background: linear-gradient(0deg, rgba(255,255,255,1) 85%, rgba(105,105,105,1) 100%, rgba(255,255,255,1) 100%);
-
-    margin: 8px;
+    background: linear-gradient(0deg, rgba(255,255,255,1) 90%, rgba(221,221,221,1) 100%, rgba(48,48,48,1) 100%);
+    margin: 4px;
     margin-top: 10px;
-        overflow: hidden;
-
+    overflow: hidden;
 }
 
 .generic-frame {
     width: fit-content;
     height: fit-content;
-    background-color: #696969;
+    background-color: #DDDDDD;
     position: absolute;
     max-height: 95vh;
     max-width: 90vw;
+    box-shadow: 2px 2px 8px 2px black;
 }
 
 .window-title {
-    color: white;
+    color: black;
     padding: 8px;
     font-size: 20px;
     font-family: monospace
@@ -95,6 +94,12 @@ html,body {
 }
 .action-buttons {
     margin-left: auto;
+ 
+}
+
+
+.btn-action {
+    color: black;
 }
 
 .genericWindow-enter-active {
