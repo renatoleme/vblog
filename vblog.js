@@ -16,12 +16,12 @@ app.component('vblog', {
             blogBoxBackup: {},
             isMaximized: false,
             blogBox: {
-                marginTop: 10,
-                marginLeft: 100,
+                marginTop: '10px',
+                marginLeft: '100px',
                 opacity: 1,
                 zIndex: 1,
-                width: 800,
-                height: 600
+                width: '800px',
+                height: '600px'
             },
             visible: true
         }
@@ -44,6 +44,7 @@ app.component('vblog', {
 <button :disabled='!prevEnable' class="nav-btn" @click="navPostLeft" ><i class="fas fa-arrow-left fa-lg"></i></button>
 <button :disabled='!nextEnable' class="nav-btn" @click="navPostRight"><i class="fas fa-arrow-right fa-lg"></i></button>
 </div>
+
 <div class="blog-content">
 
 <div class="post-header">
@@ -53,7 +54,11 @@ app.component('vblog', {
 </div>
 
 <div class="post-content">
+
 <p v-html="this.currentPost.content" />
+
+
+
 </div>
 
 </div>
@@ -133,10 +138,10 @@ app.component('vblog', {
             if (!this.isMaximized) {
                 console.log(window.innerHeight)
                 this.blogBoxBackup = JSON.parse(JSON.stringify(this.blogBox))
-                this.blogBox.width = window.innerWidth - 85
-                this.blogBox.height = window.innerHeight 
-                this.blogBox.marginLeft = 78
-                this.blogBox.marginTop = - 8
+                this.blogBox.width = (window.innerWidth - 85) + 'px'
+                this.blogBox.height = window.innerHeight + 'px'
+                this.blogBox.marginLeft = '78px'
+                this.blogBox.marginTop = '-10px'
                 this.isMaximized = true
             }
             else {
@@ -151,7 +156,7 @@ app.component('vblog', {
             this.blogBox.opacity = opacity
         },
         moveStart(event) {
-            const info = { diffY : event.clientY - this.blogBox.marginTop, diffX : event.clientX - this.blogBox.marginLeft, ref: this.$props.taskId}
+            const info = { diffY : event.clientY - parseInt(this.blogBox.marginTop, 10), diffX : event.clientX - parseInt(this.blogBox.marginLeft, 10), ref: this.$props.taskId}
             this.$emit('set-focus', info)
             if (event.target.id === "clickable" && !this.isMaximized) {
                 this.setOpacity (0.5)
@@ -159,8 +164,8 @@ app.component('vblog', {
             }
         },
         moveWindow(event, diffX, diffY) {
-            this.blogBox.marginTop = event.clientY - diffY;
-            this.blogBox.marginLeft = event.clientX - diffX;
+            this.blogBox.marginTop = (event.clientY - diffY) + 'px';
+            this.blogBox.marginLeft = (event.clientX - diffX) + 'px';
         },
         setCurrentPost() {
             this.currentPost = this.posts[this.posts.length-1]
